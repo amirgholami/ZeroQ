@@ -30,7 +30,7 @@ from distill_data import *
 # model settings
 def arg_parse():
     parser = argparse.ArgumentParser(
-        description='zero order analysis for quantized model')
+        description='This repository contains the PyTorch implementation for the paper ZeroQ: A Novel Zero-Shot Quantization Framework.')
     parser.add_argument('--dataset',
                         type=str,
                         default='imagenet',
@@ -51,7 +51,7 @@ def arg_parse():
                         help='batch size of distilled data')
     parser.add_argument('--test_batch_size',
                         type=int,
-                        default=512,
+                        default=128,
                         help='batch size of test data')
     args = parser.parse_args()
     return args
@@ -62,32 +62,35 @@ if __name__ == '__main__':
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-    # load pretrained model
+    # Load pretrained model
     model = ptcv_get_model(args.model, pretrained=True)
-    print('******full precision model loaded******')
+    print('****** Full precision model loaded ******')
 
-    # load validation data
+    # Load validation data
     test_loader = getTestData(args.dataset,
                               batch_size=args.test_batch_size,
                               path='./data/imagenet/',
                               for_inception=args.model.startswith('inception'))
-    # generate distilled data
+    # Generate distilled data
     dataloader = getDistilData(
         model.cuda(),
         args.dataset,
         batch_size=args.batch_size,
         for_inception=args.model.startswith('inception'))
-    print('******data loaded******')
+    print('****** Data loaded ******')
 
-    # quantize single-precision model to 8-bit model
+    # Quantize single-precision model to 8-bit model
     quantized_model = quantize_model(model)
-    # freeze BatchNorm statistics
+    # Freeze BatchNorm statistics
     quantized_model.eval()
     quantized_model = quantized_model.cuda()
 
-    # update activation range according to distilled data
+    # Update activation range according to distilled data
     update(quantized_model, dataloader)
-    # freeze activation range during test
+
+    # Freeze activation range during test
     freeze_model(quantized_model)
     quantized_model = nn.DataParallel(quantized_model).cuda()
+
+    # Test the final quantized model
     test(quantized_model, test_loader)
