@@ -63,5 +63,5 @@ optional arguments:
 ## Citation
 ZeroQ has been developed as part of the following paper. We appreciate it if you would please cite the following paper if you found the implementation useful for your work:
 
-Y. Cai, Z. Yao, Z. Dong, A. Gholami, M. W. Mahoney, K. Keutzer . ZeroQ: A Novel Zero Shot Quantization Framework, under review [PDF]()
+Y. Cai, Z. Yao, Z. Dong, A. Gholami, M. W. Mahoney, K. Keutzer. *ZeroQ: A Novel Zero Shot Quantization Framework*, under review [[PDF]()].
 
