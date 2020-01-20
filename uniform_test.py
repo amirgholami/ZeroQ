@@ -59,8 +59,8 @@ def arg_parse():
 
 if __name__ == '__main__':
     args = arg_parse()
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = False
+    torch.backends.cudnn.benchmark = True
 
     # Load pretrained model
     model = ptcv_get_model(args.model, pretrained=True)
@@ -87,6 +87,7 @@ if __name__ == '__main__':
 
     # Update activation range according to distilled data
     update(quantized_model, dataloader)
+    print('****** Zero Shot Quantization Finished ******')
 
     # Freeze activation range during test
     freeze_model(quantized_model)

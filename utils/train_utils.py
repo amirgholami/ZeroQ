@@ -54,12 +54,10 @@ def update(quantized_model, distilD):
     quantized_model: a quantized model whose activation range to be updated 
     distilD: distilled data
     """
-    print('******updateing BN stats...', end='')
     with torch.no_grad():
         for batch_idx, inputs in enumerate(distilD):
             if isinstance(inputs, list):
                 inputs = inputs[0]
             inputs = inputs.cuda()
             outputs = quantized_model(inputs)
-    print(' Finished******')
     return quantized_model
