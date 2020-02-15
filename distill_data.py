@@ -30,9 +30,9 @@ from utils import *
 def own_loss(A, B):
     """
 	L-2 loss between A and B normalized by length.
-	A and B should have the same shape
+    Shape of A should be (features_num, ), shape of B should be (batch_size, features_num)
 	"""
-    return (A - B).norm()**2 / A.size(0)
+    return (A - B).norm()**2 / B.size(0)
 
 
 class output_hook(object):
@@ -104,7 +104,7 @@ def getDistilData(teacher_model,
         gaussian_data = gaussian_data.cuda()
         gaussian_data.requires_grad = True
         crit = nn.CrossEntropyLoss().cuda()
-        optimizer = optim.Adam([gaussian_data], lr=0.1)
+        optimizer = optim.Adam([gaussian_data], lr=0.5)
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer,
                                                          min_lr=1e-4,
                                                          verbose=False,
@@ -141,8 +141,8 @@ def getDistilData(teacher_model,
             tmp_std = torch.sqrt(
                 torch.var(gaussian_data.view(gaussian_data.size(0), 3, -1),
                           dim=2) + eps)
-            mean_loss += own_loss(tmp_mean, input_mean)
-            std_loss += own_loss(tmp_std, input_std)
+            mean_loss += own_loss(input_mean, tmp_mean)
+            std_loss += own_loss(input_std, tmp_std)
             total_loss = mean_loss + std_loss
 
             # update the distilled data
@@ -151,8 +151,8 @@ def getDistilData(teacher_model,
             scheduler.step(total_loss.item())
 
             # early stop to prevent overfitting
-            if total_loss <= (layers + 1) * 5:
-                break
+            # if total_loss <= (layers + 1) * 5:
+            #     break
 
         refined_gaussian.append(gaussian_data.detach().clone())
 
