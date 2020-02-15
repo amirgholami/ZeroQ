@@ -150,10 +150,6 @@ def getDistilData(teacher_model,
             optimizer.step()
             scheduler.step(total_loss.item())
 
-            # early stop to prevent overfitting
-            # if total_loss <= (layers + 1) * 5:
-            #     break
-
         refined_gaussian.append(gaussian_data.detach().clone())
 
     for handle in hook_handles:
