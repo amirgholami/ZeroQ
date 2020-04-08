@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This repository contains the PyTorch implementation for the paper [*ZeroQ: A Novel Zero-Shot Quantization Framework*](https://arxiv.org/abs/2001.00281).
+This repository contains the PyTorch implementation for the **CVPR 2020** paper [*ZeroQ: A Novel Zero-Shot Quantization Framework*](https://arxiv.org/abs/2001.00281).
 
 ## TLDR;
 
