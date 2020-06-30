@@ -7,7 +7,7 @@
 
 This repository contains the PyTorch implementation for the **CVPR 2020** paper [*ZeroQ: A Novel Zero-Shot Quantization Framework*](https://arxiv.org/abs/2001.00281). Below are instructions for reproducing classification results. Please see [detection readme](https://github.com/amirgholami/ZeroQ/tree/master/detection) for instructions to reproduce object detection results.
 
-You can find a 15 minute video explanation of ZeroQ [here](https://news.developer.nvidia.com/nvidia-partners-present-ai-research-at-cvpr-2020/).
+You can find a short video explanation of ZeroQ [here](https://news.developer.nvidia.com/nvidia-partners-present-ai-research-at-cvpr-2020/).
 
 ## TLDR;
 
