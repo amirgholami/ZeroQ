@@ -63,6 +63,13 @@ class QuantAct(Module):
         """
         self.running_stat = False
 
+
+    def unfix(self):
+        """
+        fix the activation range by setting running stat
+        """
+        self.running_stat = True
+
     def forward(self, x):
         """
         quantize given activation x

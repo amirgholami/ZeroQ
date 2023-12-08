@@ -9,7 +9,7 @@ This repository contains the PyTorch implementation for the **CVPR 2020** paper 
 ## TLDR;
 
 ```bash
-# Code is based on PyTorch 1.2 (Cuda10). Other dependancies could be installed as follows: 
+# Code is based on PyTorch 1.2 (cpu10). Other dependancies could be installed as follows: 
 pip install -r requirements.txt --user
 # Set a symbolic link to ImageNet validation data (used only to evaluate model) 
 mkdir data
@@ -47,7 +47,7 @@ Below are the results that you should get for 8-bit quantization (**W8A8** refer
 - You can test a single model using the following command:
 
 ```bash
-export CUDA_VISIBLE_DEVICES=0
+export cpu_VISIBLE_DEVICES=0
 python uniform_test.py [--dataset] [--model] [--batch_size] [--test_batch_size]
 
 optional arguments:

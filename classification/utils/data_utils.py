@@ -42,14 +42,14 @@ class UniformDataset(Dataset):
         return sample
 
 
-def getRandomData(dataset='cifar10', batch_size=512, for_inception=False):
+def getRandomData(dataset='cifar100', batch_size=512, for_inception=False):
     """
     get random sample dataloader 
     dataset: name of the dataset 
     batch_size: the batch size of random data
     for_inception: whether the data is for Inception because inception has input size 299 rather than 224
     """
-    if dataset == 'cifar10':
+    if dataset == 'cifar10' or dataset == 'cifar100':
         size = (3, 32, 32)
         num_data = 10000
     elif dataset == 'imagenet':
@@ -110,3 +110,19 @@ def getTestData(dataset='imagenet',
                                  shuffle=False,
                                  num_workers=32)
         return test_loader
+    elif dataset == 'cifar100':
+        data_dir = 'data/cifar100'
+        normalize = transforms.Normalize(mean=(0.5071, 0.4867, 0.4408),
+                                         std=(0.2675, 0.2565, 0.2761))
+        transform_test = transforms.Compose([transforms.ToTensor(), normalize])
+
+        test_dataset = datasets.CIFAR100(root=data_dir,
+                                        train=False,
+                                        transform=transform_test,
+                                        download=True)
+        test_loader = DataLoader(test_dataset,
+                                 batch_size=batch_size,
+                                 shuffle=False,
+                                 num_workers=32)
+        return test_loader
+

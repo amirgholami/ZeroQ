@@ -34,17 +34,17 @@ def quantize_model(model):
 
     # quantize convolutional and linear layers to 8-bit
     if type(model) == nn.Conv2d:
-        quant_mod = Quant_Conv2d(weight_bit=8)
+        quant_mod = Quant_Conv2d(weight_bit=6)
         quant_mod.set_param(model)
         return quant_mod
     elif type(model) == nn.Linear:
-        quant_mod = Quant_Linear(weight_bit=8)
+        quant_mod = Quant_Linear(weight_bit=6)
         quant_mod.set_param(model)
         return quant_mod
 
     # quantize all the activation to 8-bit
     elif type(model) == nn.ReLU or type(model) == nn.ReLU6:
-        return nn.Sequential(*[model, QuantAct(activation_bit=8)])
+        return nn.Sequential(*[model, QuantAct(activation_bit=6)])
 
     # recursively use the quantized module to replace the single-precision module
     elif type(model) == nn.Sequential:

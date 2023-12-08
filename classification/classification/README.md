@@ -9,7 +9,7 @@ This repository contains the PyTorch implementation for the paper [*ZeroQ: A Nov
 ## TLDR;
 
 ```bash
-# Code is based on PyTorch 1.2 (Cuda10). Other dependancies could be installed as follows: 
+# Code is based on PyTorch 1.2 (cpu10). Other dependancies could be installed as follows: 
 pip install -r requirements.txt --user
 # Set a symbolic link to ImageNet validation data (used only to evaluate model) 
 mkdir data

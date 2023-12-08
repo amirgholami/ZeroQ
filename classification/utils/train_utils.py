@@ -33,7 +33,7 @@ def test(model, test_loader):
     model.eval()
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(test_loader):
-            inputs, targets = inputs.cuda(), targets.cuda()
+            inputs, targets = inputs.cpu(), targets.cpu()
             outputs = model(inputs)
             _, predicted = outputs.max(1)
             total += targets.size(0)
@@ -58,6 +58,6 @@ def update(quantized_model, distilD):
         for batch_idx, inputs in enumerate(distilD):
             if isinstance(inputs, list):
                 inputs = inputs[0]
-            inputs = inputs.cuda()
+            inputs = inputs.cpu()
             outputs = quantized_model(inputs)
     return quantized_model

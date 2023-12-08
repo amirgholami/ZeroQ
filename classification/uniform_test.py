@@ -34,7 +34,7 @@ def arg_parse():
     parser.add_argument('--dataset',
                         type=str,
                         default='imagenet',
-                        choices=['imagenet', 'cifar10'],
+                        choices=['imagenet', 'cifar10', 'cifar100'],
                         help='type of dataset')
     parser.add_argument('--model',
                         type=str,
@@ -42,7 +42,7 @@ def arg_parse():
                         choices=[
                             'resnet18', 'resnet50', 'inceptionv3',
                             'mobilenetv2_w1', 'shufflenet_g1_w1',
-                            'resnet20_cifar10', 'sqnxt23_w2'
+                            'resnet20_cifar10', 'sqnxt23_w2', 'resnet20_cifar100'
                         ],
                         help='model to be quantized')
     parser.add_argument('--batch_size',
@@ -65,15 +65,19 @@ if __name__ == '__main__':
     # Load pretrained model
     model = ptcv_get_model(args.model, pretrained=True)
     print('****** Full precision model loaded ******')
-
+    
     # Load validation data
     test_loader = getTestData(args.dataset,
                               batch_size=args.test_batch_size,
                               path='./data/imagenet/',
                               for_inception=args.model.startswith('inception'))
+    
+    #test first.
+    
+    test(model, test_loader)
     # Generate distilled data
     dataloader = getDistilData(
-        model.cuda(),
+        model.cpu(),
         args.dataset,
         batch_size=args.batch_size,
         for_inception=args.model.startswith('inception'))
@@ -83,15 +87,20 @@ if __name__ == '__main__':
     quantized_model = quantize_model(model)
     # Freeze BatchNorm statistics
     quantized_model.eval()
-    quantized_model = quantized_model.cuda()
+    quantized_model = quantized_model.cpu()
 
+    # # Test the final quantized model before updating activation range.
+    freeze_model(quantized_model)
+    test(quantized_model, test_loader)
+    unfreeze_model(quantized_model)
+    
     # Update activation range according to distilled data
     update(quantized_model, dataloader)
     print('****** Zero Shot Quantization Finished ******')
 
     # Freeze activation range during test
     freeze_model(quantized_model)
-    quantized_model = nn.DataParallel(quantized_model).cuda()
+    quantized_model = nn.DataParallel(quantized_model).cpu()
 
     # Test the final quantized model
     test(quantized_model, test_loader)

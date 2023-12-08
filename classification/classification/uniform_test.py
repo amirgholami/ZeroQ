@@ -36,7 +36,7 @@ def arg_parse():
     parser.add_argument('--dataset',
                         type=str,
                         default='imagenet',
-                        choices=['imagenet', 'cifar10'],
+                        choices=['imagenet', 'cifar10', 'cifar100'],
                         help='type of dataset')
     parser.add_argument('--model',
                         type=str,
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
         # Generate distilled data
         dataloader = getDistilData(
-            model.cuda(),
+            model.cpu(),
             args.dataset,
             batch_size=args.batch_size,
             for_inception=args.model.startswith('inception'))
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         quantized_model = quantize_model(model)
         # Freeze BatchNorm statistics
         quantized_model.eval()
-        quantized_model = quantized_model.cuda()
+        quantized_model = quantized_model.cpu()
 
         # Update activation range according to distilled data
         update(quantized_model, dataloader)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     # Freeze activation range during test
     freeze_model(quantized_model)
-    quantized_model = nn.DataParallel(quantized_model).cuda()
+    quantized_model = nn.DataParallel(quantized_model).cpu()
 
     # Test the final quantized model
     test(quantized_model, test_loader)
